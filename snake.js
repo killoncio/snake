@@ -75,15 +75,19 @@ class Game {
 
 	constructor() {
 		this.snake 	= new Snake();
-		this.limits = [25, 50];
 		this.el 	= document.getElementById('board');
+		this.size = {
+			x: this.el.childElementCount,
+			y: this.el.children[0].childElementCount
+		};
+			// [25, 50];
 		this.foodCoords = this.getFoodCoord();
 		this.limitsCoords = this.getLimitsCoords();
 		this.board 	= this.getEmptyBoard();
 	}
 
 	getFoodCoord() {
-		let random = [utils.getRandomInt(this.limits[0]), utils.getRandomInt(this.limits[1])];
+		let random = [utils.getRandomInt(this.size.x), utils.getRandomInt(this.size.y)];
 
 		if (utils.includes(this.snake.squares, random)) {
 			random = this.getFoodCoord();
@@ -95,13 +99,13 @@ class Game {
 	getLimitsCoords() {
 		let limits = [];
 
-		for (let i = 0; i <= this.limits[0]; i++) {
-			for (let j = 0; j <= this.limits[1]; j++) {
+		for (let i = 0; i <= this.size.x; i++) {
+			for (let j = 0; j <= this.size.y; j++) {
 				if (
 					i === 0 ||
-					i === this.limits[0] ||
+					i === this.size.x ||
 					j === 0 ||
-					j === this.limits[1]
+					j === this.size.y
 					) {
 					limits.push([i,j]);
 				}
@@ -115,9 +119,9 @@ class Game {
 	getEmptyBoard() {
 		let board = [];
 
-		for (let i =0; i<=this.limits[0]; i++) {
+		for (let i =0; i<=this.size.y; i++) {
 			board[i] = [];
-			for (let j=0; j<=this.limits[1];j++) {
+			for (let j=0; j<=this.size.x;j++) {
 				board[i][j] = '_';
 			}
 		}
