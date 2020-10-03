@@ -8,12 +8,8 @@ class Game {
 		this.state 			= this.setEmptyState();
 		this.snake 			= new Snake();
 		this.wrapper		= document.getElementById('board');
-
-			// [25, 50];
 		this.foodCoords 	= this.getFoodCoord();
 		this.limitsCoords 	= this.getLimitsCoords();
-		// this.board 			= this.getEmptyBoard();
-		// this.$emptyBoard 	= this.$el.children().clone();
 	}
 
 	init() {
@@ -38,9 +34,6 @@ class Game {
 				state[i][j] = '';
 			}
 		}
-		// for (const [x,y] of this.getLimitsCoords(x,y)) {
-		// 	board[x][y] = "v";
-		// }
 
 		return state;
 	}
@@ -127,8 +120,6 @@ class Game {
 		const [x,y] = this.foodCoords;
 		this.state[y][x] = 'C';
 
-		// this.$el.html($board.html());
-
 		this.render();
 	}
 
@@ -159,10 +150,6 @@ class Snake {
 	move(andGrow) {
 		const newHeadCoords = utils.sumCoords(this.getHeadPosition(), utils.newSquare[this.direction]);
 
-		// if (newHeadCoords in foodCoords) {
-		// 	this.squares.push(newHeadCoords);
-		// } else if (newHeadCoords in limitsCoords) {
-		// 	game.end();
 		if (utils.includes(this.squares, newHeadCoords)) {
 			this.selfTouched = true;
 		} else {
@@ -177,12 +164,6 @@ class Snake {
 		const event = new Event('moved');
 		window.dispatchEvent(event);
 	}
-
-	// render() {
-
-	// ${state.map((row) => `<div class="row">${row.map((el)=>`<div class="col">${el}</div>`).join('')}</div>`).join('')}
-
-	// }
 
 	getHeadPosition() {
 		return this.squares[this.squares.length - 1];
