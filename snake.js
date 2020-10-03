@@ -1,89 +1,35 @@
-/// Status:
-/// Checking setInterval. For unknown reason, this is pointing to window obj
-/// when calling this.direction inside snake.move()
-
-
-class Square {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	changeColor() {
-
-	}
-
-
-}
-
-
-function onKeyPress(e) {
-
-}
-
-class Snake {
-
-	constructor() {
-		this.direction = 'down';
-		this.squares = [[5,5],[6,5]];
-		this.selfTouched = false;
-	}
-
-	startMoving() {
-		this.moveInterval = setInterval(this.move.bind(this),100);
-	}
-
-	move(andGrow) {
-		const newHeadCoords = utils.sumCoords(this.getHeadPosition(), utils.newSquare[this.direction]);
-
-		// if (newHeadCoords in foodCoords) {
-		// 	this.squares.push(newHeadCoords);
-		// } else if (newHeadCoords in limitsCoords) {
-		// 	game.end();
-		if (utils.includes(this.squares, newHeadCoords)) {
-			this.selfTouched = true;
-		} else {
-			if (!andGrow) {
-				this.squares.shift();
-			}
-			this.squares.push(newHeadCoords);
-		}
-		console.log(`move to ${this.direction}`);
-		console.log(`head in square ${this.getHeadPosition()}`);
-
-		const event = new Event('moved');
-		window.dispatchEvent(event);
-	}
-
-	render() {
-
-	}
-
-	getHeadPosition() {
-		return this.squares[this.squares.length - 1];
-	}
-
-	changeDirection(newDirection) {
-		this.direction = newDirection;
-		clearInterval(this.moveInterval);
-		this.move();
-		this.startMoving();
-	}
-}
-
 class Game {
 
-	constructor() {
-		this.snake 	= new Snake();
-		this.el 	= document.getElementById('board');
-		this.size = {
-			x: this.el.childElementCount,
-			y: this.el.children[0].childElementCount
+	constructor(x,y) {
+		this.size 			= {
+			x: x,
+			y: y
 		};
+		this.state 			= this.setEmptyState();
+		this.snake 			= new Snake();
+		this.wrapper		= document.getElementById('board');
+
 			// [25, 50];
-		this.foodCoords = this.getFoodCoord();
-		this.limitsCoords = this.getLimitsCoords();
-		this.board 	= this.getEmptyBoard();
+		this.foodCoords 	= this.getFoodCoord();
+		this.limitsCoords 	= this.getLimitsCoords();
+		// this.board 			= this.getEmptyBoard();
+		// this.$emptyBoard 	= this.$el.children().clone();
+	}
+
+	setEmptyState() {
+		let state = [];
+
+		for (let i =0; i<=this.size.y; i++) {
+			state[i] = [];
+			for (let j=0; j<=this.size.x;j++) {
+				state[i][j] = '';
+			}
+		}
+		// for (const [x,y] of this.getLimitsCoords(x,y)) {
+		// 	board[x][y] = "v";
+		// }
+
+		return state;
 	}
 
 	getFoodCoord() {
@@ -130,13 +76,6 @@ class Game {
 		}
 
 		return board;
-		//	[1,2,3,4,5,...],
-		//	[1,2,3,4,5,...],
-		//	[1,2,3,4,5,...],
-		//	[1,2,3,4,5,...],
-		//	[1,2,3,4,5,...],
-		//	[1,2,3,4,5,...],
-		//]
 	}
 
 	start() {
@@ -168,30 +107,27 @@ class Game {
 			const andGrow = true;
 			this.snake.move(andGrow);
 		} else {
-			this.updateBoard();
+			this.updateState();
 		}
 	}
 
-	updateBoard() {
-		this.board 	= this.getEmptyBoard();
+	updateState() {
+		this.state = this.setEmptyState();
 
 		for (const [x,y] of this.snake.squares) {
-			this.board[x][y] = '*';
+			this.state[y][x] = '*';
 		}
 
-		const [a,b] = this.foodCoords;
-		this.board[a][b] = 'C';
+		const [x,y] = this.foodCoords;
+		this.state[y][x] = 'C';
+
+		// this.$el.html($board.html());
 
 		this.render();
 	}
 
 	render() {
-		let boardPlotted  = '';
-
-		for (const ar of this.board) {
-			boardPlotted = boardPlotted + ar.join('') + '\n';
-		}
-		this.el.innerText = boardPlotted;
+		this.wrapper.innerHTML = this.state.map((row) =>`<div class="row">${row.map((el)=>`<div class="col ${el === '*' ? `snake` : (el === 'C' ? `food` : ``)}"></div>`).join('')}</div>`).join('');
 	}
 
 	end() {
@@ -200,12 +136,64 @@ class Game {
 	}
 }
 
+class Snake {
+
+	constructor() {
+		this.direction = 'down';
+		this.squares = [[5,5],[6,5]];
+		this.selfTouched = false;
+	}
+
+	startMoving() {
+		this.moveInterval = setInterval(this.move.bind(this),100);
+	}
+
+	move(andGrow) {
+		const newHeadCoords = utils.sumCoords(this.getHeadPosition(), utils.newSquare[this.direction]);
+
+		// if (newHeadCoords in foodCoords) {
+		// 	this.squares.push(newHeadCoords);
+		// } else if (newHeadCoords in limitsCoords) {
+		// 	game.end();
+		if (utils.includes(this.squares, newHeadCoords)) {
+			this.selfTouched = true;
+		} else {
+			if (!andGrow) {
+				this.squares.shift();
+			}
+			this.squares.push(newHeadCoords);
+		}
+		console.log(`move to ${this.direction}`);
+		console.log(`head in square ${this.getHeadPosition()}`);
+
+		const event = new Event('moved');
+		window.dispatchEvent(event);
+	}
+
+	// render() {
+
+	// ${state.map((row) => `<div class="row">${row.map((el)=>`<div class="col">${el}</div>`).join('')}</div>`).join('')}
+
+	// }
+
+	getHeadPosition() {
+		return this.squares[this.squares.length - 1];
+	}
+
+	changeDirection(newDirection) {
+		this.direction = newDirection;
+		clearInterval(this.moveInterval);
+		this.move();
+		this.startMoving();
+	}
+}
+
 const utils = {
 	newSquare: {
-		left: [0, -1],
-		right: [0, 1],
-		up: [-1, 0],
-		down: [1, 0],
+		left: [-1, 0],
+		right: [1, 0],
+		up: [0, -1],
+		down: [0, 1],
 	},
 	sumCoords: function sumCoords([x1,y1], [x2,y2]) {
 		return [x1 + x2, y1 + y2];
@@ -248,7 +236,7 @@ const utils = {
 	}
 }
 
-const game = new Game();
+const game = new Game(20,20);
 
-// game.start();
+game.start();
 
