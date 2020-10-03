@@ -16,6 +16,19 @@ class Game {
 		// this.$emptyBoard 	= this.$el.children().clone();
 	}
 
+	init() {
+		document.getElementsByClassName('controls__button__start')[0].addEventListener('click', this.start.bind(this));
+	}
+
+	start() {
+		window.addEventListener('keydown', this.onKeyDown.bind(this));
+		window.addEventListener('moved', this.checkStatusAndUpdate.bind(this));
+		this.state 	= this.setEmptyState();
+		this.snake 	= new Snake();
+		this.snake.startMoving();
+		this.snake.move();
+	}
+
 	setEmptyState() {
 		let state = [];
 
@@ -78,13 +91,6 @@ class Game {
 		return board;
 	}
 
-	start() {
-		window.addEventListener('keydown', this.onKeyDown.bind(this));
-		window.addEventListener('moved', this.checkStatusAndUpdate.bind(this));
-		this.snake.startMoving();
-		this.snake.move();
-	}
-
 	onKeyDown(e) {
 		if (Object.keys(utils.arrowEvents).includes(e.key)) {
 			const newDirection = utils.arrowEvents[e.key];
@@ -133,6 +139,8 @@ class Game {
 	end() {
 		alert('you failed!');
 		clearInterval(this.snake.moveInterval);
+		window.removeEventListener('keydown', this.onKeyDown.bind(this));
+		window.removeEventListener('moved', this.checkStatusAndUpdate.bind(this));
 	}
 }
 
@@ -238,5 +246,5 @@ const utils = {
 
 const game = new Game(20,20);
 
-game.start();
+game.init();
 

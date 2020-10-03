@@ -29,15 +29,41 @@
 			.food {
 				background-color: grey;
 			}
+
+			.btn-primary {
+				color: #fff;
+    			background-color: #007bff;
+    			border-color: #007bff;
+			}
+
+			.btn {
+			    display: inline-block;
+			    font-weight: 400;
+			    text-align: center;
+			    white-space: nowrap;
+			    vertical-align: middle;
+			    -webkit-user-select: none;
+			    -moz-user-select: none;
+			    -ms-user-select: none;
+			    user-select: none;
+			    border: 1px solid transparent;
+			    padding: .375rem .75rem;
+			    font-size: 1rem;
+			    line-height: 1.5;
+			    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+
+			.controls {
+				clear: both;
+				margin-top: 50px;
+			}
     	</style>
     </head>
     <body>
         <div id="board"></div>
-        <
-		<script
-		  src="https://code.jquery.com/jquery-2.2.4.min.js"
-		  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-		  crossorigin="anonymous"></script>
+        <div id="controls" class="controls">
+        	<button type="button" class="btn btn-primary controls__button__start">New game</button>
+        </div>
         <script src="snake.js"></script>
     </body>
 </html>
