@@ -48,7 +48,7 @@ class Game {
 	getFoodCoord() {
 		let random = [utils.getRandomInt(this.size.x), utils.getRandomInt(this.size.y)];
 
-		if (utils.includes(this.snake.squares, random)) {
+		if (utils.includes(this.snake.squares, random) || utils.isCorner(random, this.size.x, this.size.y)) {
 			random = this.getFoodCoord();
 		}
 
@@ -241,6 +241,11 @@ const utils = {
 		} else {
 			return leftRight.filter(dir => dir !== direction).join();
 		}
+	},
+	isCorner(random, xMax, yMax) {
+		const corners = [[1,1], [1,yMax - 1], [xMax - 1, 1], [xMax - 1, yMax - 1]];
+
+		return utils.includes(corners, random);
 	}
 }
 
