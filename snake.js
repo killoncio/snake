@@ -114,17 +114,27 @@ class Game {
 		this.state = this.setEmptyState();
 
 		for (const [x,y] of this.snake.squares) {
-			this.state[y][x] = '*';
+			this.state[y][x] = this.renderSquare('snake');
 		}
 
 		const [x,y] = this.foodCoords;
-		this.state[y][x] = 'C';
+		this.state[y][x] = this.renderSquare('food');
 
 		this.render();
 	}
 
 	render() {
-		this.wrapper.innerHTML = this.state.map((row) =>`<div class="row">${row.map((el)=>`<div class="col ${el === '*' ? `snake` : (el === 'C' ? `food` : ``)}"></div>`).join('')}</div>`).join('');
+		this.wrapper.innerHTML = this.state.map((row) =>`<div class="row">${row.map((el)=> el || this.renderSquare('empty')).join('')}</div>`).join('');
+	}
+
+	renderSquare(type) {
+		if (type === 'snake') {
+			return '<div class="col snake"></div>';
+		} else if (type === 'food') {
+			return '<div class="col food"></div>';
+		} else if (type === 'empty') {
+			return '<div class="col"></div>';
+		}
 	}
 
 	end() {
