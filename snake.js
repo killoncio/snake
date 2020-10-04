@@ -1,5 +1,4 @@
 class Game {
-
 	constructor(x,y) {
 		this.size 			= {
 			x: x,
@@ -8,23 +7,19 @@ class Game {
 		this.state 			= this.setEmptyState();
 		this.snake 			= new Snake();
 		this.wrapper		= document.getElementById('board');
-		this.foodCoords 	= this.getFoodCoord();
-		this.limitsCoords 	= this.getLimitsCoords();
+		this.foodSquare 	= this.getFoodSquare();
+		this.limitSquares 	= this.getlimitSquares();
 	}
-
 	init() {
-		document.getElementsByClassName('controls__button__start')[0].addEventListener('click', this.start.bind(this));
+		const startButton = document.getElementsByClassName('controls__button__start')[0];
+		startButton.addEventListener('click', this.start.bind(this));
 	}
-
 	start() {
 		window.addEventListener('keydown', this.onKeyDown.bind(this));
 		window.addEventListener('moved', this.checkStatusAndUpdate.bind(this));
-		this.state 	= this.setEmptyState();
-		this.snake 	= new Snake();
 		this.snake.startMoving();
 		this.snake.move();
 	}
-
 	setEmptyState() {
 		let state = [];
 
@@ -37,18 +32,16 @@ class Game {
 
 		return state;
 	}
-
-	getFoodCoord() {
+	getFoodSquare() {
 		let random = [utils.getRandomInt(this.size.x), utils.getRandomInt(this.size.y)];
 
 		if (utils.includes(this.snake.squares, random) || utils.isCorner(random, this.size.x, this.size.y)) {
-			random = this.getFoodCoord();
+			random = this.getFoodSquare();
 		}
 
 		return random;
 	}
-
-	getLimitsCoords() {
+	getlimitSquares() {
 		let limits = [];
 
 		for (let i = 0; i <= this.size.x; i++) {
@@ -67,25 +60,8 @@ class Game {
 		return limits;
 
 	}
-
-	getEmptyBoard() {
-		let board = [];
-
-		for (let i =0; i<=this.size.y; i++) {
-			board[i] = [];
-			for (let j=0; j<=this.size.x;j++) {
-				board[i][j] = '_';
-			}
-		}
-		for (const [x,y] of this.limitsCoords) {
-			board[x][y] = "v";
-		}
-
-		return board;
-	}
-
 	onKeyDown(e) {
-		if (Object.keys(utils.arrowEvents).includes(e.key)) {
+		if (utils.isCursorKey(e.key)) {
 			const newDirection = utils.arrowEvents[e.key];
 			const oppositeDirection = utils.getOpposite(this.snake.direction);
 
@@ -95,21 +71,19 @@ class Game {
 			}
 		}
 	}
-
 	checkStatusAndUpdate() {
 		const head = this.snake.getHeadPosition();
 
-		if (this.snake.selfTouched || utils.includes(this.limitsCoords, head)) {
+		if (this.snake.selfTouched || utils.includes(this.limitSquares, head)) {
 			game.end();
-		} else if (utils.includes(this.foodCoords, head)) {
-			this.foodCoords = this.getFoodCoord();
+		} else if (utils.includes(this.foodSquare, head)) {
+			this.foodSquare = this.getFoodSquare();
 			const andGrow = true;
 			this.snake.move(andGrow);
 		} else {
 			this.updateState();
 		}
 	}
-
 	updateState() {
 		this.state = this.setEmptyState();
 
@@ -117,7 +91,7 @@ class Game {
 			this.state[y][x] = this.renderSquare('snake');
 		}
 
-		const [x,y] = this.foodCoords;
+		const [x,y] = this.foodSquare;
 		this.state[y][x] = this.renderSquare('food');
 
 		this.render();
@@ -126,7 +100,6 @@ class Game {
 	render() {
 		this.wrapper.innerHTML = this.state.map((row) =>`<div class="row">${row.map((el)=> el || this.renderSquare('empty')).join('')}</div>`).join('');
 	}
-
 	renderSquare(type) {
 		if (type === 'snake') {
 			return '<div class="col snake"></div>';
@@ -136,7 +109,6 @@ class Game {
 			return '<div class="col"></div>';
 		}
 	}
-
 	end() {
 		alert('you failed!');
 		clearInterval(this.snake.moveInterval);
@@ -237,6 +209,9 @@ const utils = {
 		const corners = [[1,1], [1,yMax - 1], [xMax - 1, 1], [xMax - 1, yMax - 1]];
 
 		return utils.includes(corners, random);
+	},
+	isCursorKey(key) {
+		return Object.keys(utils.arrowEvents).includes(key);
 	}
 }
 
