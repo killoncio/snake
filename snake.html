@@ -57,13 +57,26 @@
 				clear: both;
 				margin-top: 50px;
 			}
+
+			.controls__input__speed {
+				line-height: 1.5;
+    			text-align: center;
+    			font-size: 1rem;
+			    padding: .375rem .75rem;
+			    margin-left: 10px;
+			}
+
+			.controls__button__start {
+				margin-left: 10px;
+			}
     	</style>
     </head>
     <body>
         <div id="board"></div>
         <div id="controls" class="controls">
         	<button type="button" class="btn btn-primary controls__button__start">New game</button>
-        	<input type="number" class="controls__input__speed" value="5" min=0 max=10>Speed
+        	<label for="controls__input__speed">Speed</label>
+        	<input type="number" id="controls__input__speed" class="controls__input__speed" value="5" min=0 max=10>
         </div>
         <script src="snake.js"></script>
     </body>
