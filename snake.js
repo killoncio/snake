@@ -4,19 +4,21 @@ class Game {
 			x: x,
 			y: y
 		};
-		this.state 			= this.setEmptyState();
-		this.snake 			= new Snake();
-		this.wrapper		= document.getElementById('board');
-		this.foodSquare 	= this.getFoodSquare();
-		this.limitSquares 	= this.getlimitSquares();
 	}
 	init() {
-		const startButton = document.getElementsByClassName('controls__button__start')[0];
+		this.wrapper		= document.getElementById('board');
+		const startButton 	= document.getElementsByClassName('controls__button__start')[0];
+
+		window.addEventListener('keydown', this.onKeyDown.bind(this));
+		window.addEventListener('moved', this.checkStatusAndUpdate.bind(this));
 		startButton.addEventListener('click', this.start.bind(this));
 	}
 	start() {
-		window.addEventListener('keydown', this.onKeyDown.bind(this));
-		window.addEventListener('moved', this.checkStatusAndUpdate.bind(this));
+		this.speed 			= Number(document.getElementsByClassName('controls__input__speed')[0].value);
+		this.state 			= this.setEmptyState();
+		this.snake 			= new Snake(this.speed);
+		this.foodSquare 	= this.getFoodSquare();
+		this.limitSquares 	= this.getlimitSquares();
 		this.snake.startMoving();
 		this.snake.move();
 	}
@@ -119,14 +121,15 @@ class Game {
 
 class Snake {
 
-	constructor() {
-		this.direction = 'down';
-		this.squares = [[5,5],[6,5]];
-		this.selfTouched = false;
+	constructor(speed) {
+		this.direction 		= 'down';
+		this.squares 		= [[5,5],[6,5]];
+		this.selfTouched 	= false;
+		this.speed 			= speed;
 	}
 
 	startMoving() {
-		this.moveInterval = setInterval(this.move.bind(this),100);
+		this.moveInterval = setInterval(this.move.bind(this),1000/this.speed);
 	}
 
 	move(andGrow) {
