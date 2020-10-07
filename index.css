@@ -1,0 +1,86 @@
+.row .col:last-child {
+    background-color: red;
+}
+.row .col:first-child {
+    background-color: red;
+}
+.row:last-child .col {
+    background-color: red;
+}
+.row:first-child .col {
+    background-color: red;
+}
+.row {
+    width: 100%;
+    clear: both;
+}
+.col {
+    height: 20px;
+    width: 20px;
+    float: left;
+}
+.snake {
+	background-color: green;
+}
+
+.food {
+	background-color: grey;
+}
+
+.btn-primary {
+	color: #fff;
+	background-color: #007bff;
+	border-color: #007bff;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.controls {
+	clear: both;
+	margin-top: 50px;
+}
+
+.controls__input__speed {
+	line-height: 1.5;
+	text-align: center;
+	font-size: 1rem;
+    padding: .375rem .75rem;
+    margin-left: 10px;
+}
+
+.controls__button__start {
+	margin-left: 10px;
+}
+
+.hide {
+	display: none;
+}
+
+.intro__text {
+    text-align: center;
+    margin-top: 200px;
+    font-size: 80px;
+}
+
+.intro__input {
+    width: 100%;
+    line-height: 50px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 50px;
+}
